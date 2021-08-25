@@ -1,6 +1,6 @@
 # trade_lab_app
 
-A simpkle initiatibe for a Trading App.
+A simpkle initiative for a Trading App.
 
 ## Getting Started
 
