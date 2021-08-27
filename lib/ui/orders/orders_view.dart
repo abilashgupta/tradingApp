@@ -19,12 +19,12 @@ class Orders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List orders = [];
-    List displayOrder = [];
     orders.add(list);
     orders.add(orderType);
     orders.add(quantity);
     orders.add(orderPrice);
-    displayOrder.addAll(orders);
+    // displayOrder.addAll(orders);
+    int extraIndex = -4;
     return ViewModelBuilder<OrdersViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
@@ -43,32 +43,37 @@ class Orders extends StatelessWidget {
                 margin: EdgeInsets.only(top: 20, left: 10),
                 child: Container(
                     child: ListView.builder(
-                        itemCount: 1,
+                        itemCount: model.displayOrder.length ~/ 4,
                         itemBuilder: (BuildContext context, int index) {
+                          extraIndex += 4;
                           return Column(
                             children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    'Company :  ',
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                  Text(
-                                    displayOrder[0]['name'],
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                ],
-                              ),
+                              if (extraIndex + 1 <
+                                  model.displayOrder.length ~/ 4)
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Company :  ',
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    Text(
+                                      model.displayOrder[extraIndex]['name'],
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                  ],
+                                ),
                               SizedBox(height: 5),
                               Row(
                                 children: [
                                   Text('Price :  ',
                                       style: TextStyle(fontSize: 18)),
-                                  Text(displayOrder[3].toString()),
+                                  Text(model.displayOrder[extraIndex + 3]
+                                      .toString()),
                                   SizedBox(width: 20),
                                   Text('Quantity :  ',
                                       style: TextStyle(fontSize: 18)),
-                                  Text(displayOrder[2].toString()),
+                                  Text(model.displayOrder[extraIndex + 2]
+                                      .toString()),
                                 ],
                               ),
                               Row(
@@ -77,21 +82,29 @@ class Orders extends StatelessWidget {
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 10, vertical: 5),
                                       decoration: BoxDecoration(
-                                        color: (displayOrder[1] == 'Buy')
+                                        color: (model.displayOrder[
+                                                    extraIndex + 1] ==
+                                                'Buy')
                                             ? Colors.green
                                             : Colors.red,
                                       ),
-                                      child: Text(displayOrder[1])),
+                                      child: Text(
+                                          model.displayOrder[extraIndex + 1])),
                                   SizedBox(width: 30),
                                   Text('Exchange:  ',
                                       style: TextStyle(fontSize: 18)),
-                                  Text(displayOrder[0]['exchange']),
+                                  Text(model.displayOrder[extraIndex]
+                                      ['exchange']),
                                 ],
                               ),
                               Divider(color: Colors.white, height: 25),
                             ],
                           );
                         }))),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => model.refreshOrders(orders),
+          child: Icon(Icons.refresh),
+        ),
       ),
       viewModelBuilder: () => OrdersViewModel(),
     );

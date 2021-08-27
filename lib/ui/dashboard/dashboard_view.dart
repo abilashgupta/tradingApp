@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:trade_lab_app/ui/marketWatch/marketwatch_view.dart';
+import 'package:trade_lab_app/ui/orders/orders_view.dart';
+import 'package:trade_lab_app/ui/profile/profile_view.dart';
 
 import 'dashboard_viewmodel.dart';
 
@@ -32,11 +34,22 @@ class Dashboard extends StatelessWidget {
               label: 'Profile',
             ),
           ],
-          onTap: (index) => model.setIndex(index),
+          onTap: model.setIndex,
         ),
-        body: MarketWatch(),
+        body: getViewForIndex(model.currentIndex),
       ),
       viewModelBuilder: () => DashboardViewModel(),
     );
+  }
+
+  Widget getViewForIndex(int index) {
+    switch (index) {
+      case 1:
+        return Orders(list: {}, orderType: '', quantity: 0, orderPrice: 0);
+      case 2:
+        return Profile();
+      default:
+        return MarketWatch();
+    }
   }
 }
